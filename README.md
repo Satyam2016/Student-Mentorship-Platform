@@ -1,0 +1,1 @@
+The Student Mentorship Platform (SMP) is a dynamic space where students and mentors come together to exchange knowledge, receive personalized guidance, and accelerate academic and professional growth.
