@@ -3,51 +3,30 @@ const cors = require("cors");
 const passport = require("passport");
 const session = require("express-session");
 const jwt = require("jsonwebtoken");
-require("dotenv").config();
-require("./passportConfig");
-
+const mongoose = require('mongoose');
+const connectingDatabase = require('./database/connect.js')
 
 
 const app = express();
-const PORT = 5000;
+const port = 5000;
 
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(cors({ origin: "http://localhost:5173" }));
 app.use(express.json()); // Middleware to parse JSON body
-app.use(session({ secret: "supersecret", resave: false, saveUninitialized: true }));
-app.use(passport.initialize());
-app.use(passport.session());
 
-//Google OAuth Route
-app.get("/auth/google", passport.authenticate("google", { 
-     scope: ["profile", "email", "https://www.googleapis.com/auth/calendar.events"] 
-}));
+app.get('/', (req, res)=>{
+  res.send("Server start")
+})
 
+const start = async () => {
+  try {
+    app.listen(port, () => {
+      console.log(`Server is running on port ${port}`);
+     
+    });
+    await connectingDatabase();
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-// Google OAuth callback
-app.get(
-     "/auth/google/callback",
-     passport.authenticate("google", { failureRedirect: "/" }),
-     (req, res) => {
-       if (!req.user) {
-         return res.redirect("http://localhost:5173?error=AuthenticationFailed");
-       }
-   
-       //Generate JWT including user's Google OAuth tokens
-       const token = jwt.sign(
-         {
-           user: req.user.profile,
-           accessToken: req.user.accessToken,
-           refreshToken: req.user.refreshToken, // Store refresh token
-         },
-         process.env.JWT_SECRET,
-         { expiresIn: "1h" }
-       );
-   
-       //Store refresh token in session or database for future use
-       req.session.refreshToken = req.user.refreshToken;
-       res.redirect(`http://localhost:5173/dashboard?token=${token}`);
-     }
-);
-
-
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+start();
