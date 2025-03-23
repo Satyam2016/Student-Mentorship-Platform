@@ -14,9 +14,7 @@ router.get("/profile", authMiddleware, (req, res) => {
 });
 
 // Mentor-only route
-router.get("/mentor/dashboard", authMiddleware, roleMiddleware("mentor"), (req, res) => {
-  res.json({ message: "Welcome, Mentor!" });
-});
+
 
 // Student-only route
 router.get("/student/dashboard", authMiddleware, roleMiddleware("student"), (req, res) => {

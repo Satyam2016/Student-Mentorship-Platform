@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 const mongoose = require('mongoose');
 const connectingDatabase = require('./database/connect.js')
 const authRoutes = require("./routes/auth");
-
+const mentor = require("./routes/mentor")
 
 const app = express();
 const port = 5000;
@@ -19,6 +19,7 @@ app.get('/', (req, res)=>{
 })
 
 app.use("/api/auth", authRoutes);
+app.use("/api/mentor", mentor)
 
 const start = async () => {
   try {
