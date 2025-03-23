@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   BookOpen,
   Calendar,
@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 
 function LandingPage() {
+  const navigate=useNavigate();
   return (
     <div className="flex min-h-screen flex-col">
       {/* Header */}
@@ -38,10 +39,12 @@ function LandingPage() {
             </a>
           </nav>
           <div className="flex items-center gap-4">
-            <a href="#" className="text-sm font-medium text-gray-600 hover:text-blue-600 hidden sm:inline-block">
+            <a href="/login" className="text-sm font-medium text-gray-600 hover:text-blue-600 hidden sm:inline-block">
               Sign In
             </a>
-            <button className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+            <button className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            onClick={navigate('/login')}
+            >
               Get Started
             </button>
           </div>
@@ -68,10 +71,12 @@ function LandingPage() {
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                  <button className="rounded-lg bg-blue-600 px-6 py-3 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                  <button className="rounded-lg bg-blue-600 px-6 py-3 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  navigate="/login" >
                     Get Started
                   </button>
-                  <button className="rounded-lg border border-gray-200 bg-white px-6 py-3 text-sm font-medium text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                  <button className="rounded-lg border border-gray-200 bg-white px-6 py-3 text-sm font-medium text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  href="#why-smp">
                     Learn More
                   </button>
                 </div>

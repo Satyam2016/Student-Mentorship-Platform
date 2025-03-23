@@ -1,27 +1,20 @@
 import React, { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import {
-     BookOpen,
-  Archive,
-  File,
-  Inbox,
-  MessagesSquare,
-  Send,
-  ShoppingCart,
-  Home,
-  Store,
-  Settings,
-  Search,
-  Bell,
-  Menu,
-  ChevronDown,
+  BookOpen,
+  Users2,
   UserPlus2,
   UserMinus2,
   CalendarPlus2,
   MessageCircle,
   Megaphone,
   FileText,
-  Users2,
+  Home,
+  Search,
+  Bell,
+  Menu,
+  ChevronDown,
+  LogOut,
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -45,6 +38,12 @@ const MentorDashboard = () => {
   const [toggle, setToggle] = useState(false);
   const [open, setOpen] = useState(false);
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    window.location.href = "/login"; 
+  };
+
   return (
     <div className="flex w-screen">
       {/* Sidebar */}
@@ -65,8 +64,8 @@ const MentorDashboard = () => {
         <div className="absolute lg:relative lg:block w-[350px] lg:w-[256px] h-screen bg-zinc-900 pt-5 pb-4">
           {/* Logo */}
           <div className="relative flex items-center font-semibold italic text-white pl-5">
-          <BookOpen className="mr-2" /> SMP
-      </div>
+            <BookOpen className="mr-2" /> SMP
+          </div>
 
           {/* Sidebar Navigation */}
           <div className="mt-6 mb-2 py-2 px-3">
@@ -87,6 +86,18 @@ const MentorDashboard = () => {
           </div>
 
           <Separator className="bg-gray-500" />
+
+          {/* Logout Button in Sidebar */}
+          <div className="mt-4 px-3">
+            <Button
+              onClick={handleLogout}
+              variant="destructive"
+              className="w-full flex items-center justify-center py-2"
+            >
+              <LogOut className="mr-2 h-5 w-5" />
+              Logout
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -112,33 +123,36 @@ const MentorDashboard = () => {
           </div>
           <Separator orientation="vertical" className="mx-4 h-6" />
           <Popover open={open} onOpenChange={setOpen}>
-      <div className="flex items-center gap-2">
-        <Button variant="outline" className="flex items-center gap-2 px-3 py-2">
-          <Avatar className="w-8 h-8">
-            <AvatarImage src="https://randomuser.me/api/portraits/men/32.jpg" />
-            <AvatarFallback className="text-sm font-medium">JD</AvatarFallback>
-          </Avatar>
-          <span className="font-medium text-black">John Doe</span>
-        </Button>
-        <PopoverTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="p-2"
-            onClick={() => setOpen(!open)}
-          >
-            <ChevronDown className="h-4 w-4 text-gray-400" />
-          </Button>
-        </PopoverTrigger>
-      </div>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" className="flex items-center gap-2 px-3 py-2">
+                <Avatar className="w-8 h-8">
+                  <AvatarImage src="https://randomuser.me/api/portraits/men/32.jpg" />
+                  <AvatarFallback className="text-sm font-medium">JD</AvatarFallback>
+                </Avatar>
+                <span className="font-medium text-black">John Doe</span>
+              </Button>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="p-2"
+                  onClick={() => setOpen(!open)}
+                >
+                  <ChevronDown className="h-4 w-4 text-gray-400" />
+                </Button>
+              </PopoverTrigger>
+            </div>
 
-      <PopoverContent align="end" className="w-40 p-2 bg-white shadow-md rounded-md">
-        <button className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-gray-100 rounded-md">
-          Logout
-        </button>
-      </PopoverContent>
-    </Popover>
-        
+            <PopoverContent align="end" className="w-40 p-2 bg-white shadow-md rounded-md">
+              <button
+                onClick={handleLogout}
+                className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-gray-100 rounded-md flex items-center"
+              >
+                <LogOut className="mr-2 h-5 w-5" />
+                Logout
+              </button>
+            </PopoverContent>
+          </Popover>
         </div>
         <Separator />
 

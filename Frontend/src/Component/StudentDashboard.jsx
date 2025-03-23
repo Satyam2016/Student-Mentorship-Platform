@@ -11,6 +11,7 @@ import {
   Menu,
   ChevronDown,
   Search,
+  LogOut
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -30,6 +31,13 @@ const studentLinks = [
 const StudentDashboard = () => {
   const [toggle, setToggle] = useState(false);
   const [open, setOpen] = useState(false);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    window.location.href = "/login"; 
+  };
+
 
   return (
     <div className="flex w-screen">
@@ -73,6 +81,18 @@ const StudentDashboard = () => {
           </div>
 
           <Separator className="bg-gray-500" />
+
+          {/* Logout Button in Sidebar */}
+          <div className="mt-4 px-3">
+            <Button
+              onClick={handleLogout}
+              variant="destructive"
+              className="w-full flex items-center justify-center py-2"
+            >
+              <LogOut className="mr-2 h-5 w-5" />
+              Logout
+            </Button>
+          </div>
         </div>
       </div>
 

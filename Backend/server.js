@@ -5,6 +5,7 @@ const session = require("express-session");
 const jwt = require("jsonwebtoken");
 const mongoose = require('mongoose');
 const connectingDatabase = require('./database/connect.js')
+const authRoutes = require("./routes/auth");
 
 
 const app = express();
@@ -16,6 +17,8 @@ app.use(express.json()); // Middleware to parse JSON body
 app.get('/', (req, res)=>{
   res.send("Server start")
 })
+
+app.use("/api/auth", authRoutes);
 
 const start = async () => {
   try {

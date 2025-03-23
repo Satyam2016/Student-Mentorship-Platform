@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import PrivateRoute from "./Component/PrivateRoute";
+import PrivateRoute from "./PrivateRoute";
 import LandingPage from "./Component/LandingPage";
 import LoginPage from "./Component/LoginPage";
 import MentorDashboard from "./Component/MentorDashboard";
