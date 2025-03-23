@@ -25,9 +25,9 @@ import { Badge } from "@/components/ui/badge";
 
 const mentorLinks = [
   { title: "Dashboard", path: "/mentor", icon: Home },
-  { title: "Students", path: "/mentor", icon: Users2 },
-  { title: "Add Student", path: "/mentor/add", icon: UserPlus2 },
-  { title: "Remove Student", path: "/mentor/remove", icon: UserMinus2 },
+  // { title: "Students", path: "/mentor", icon: Users2 },
+  // { title: "Add Student", path: "/mentor/add", icon: UserPlus2 },
+  // { title: "Remove Student", path: "/mentor/remove", icon: UserMinus2 },
   { title: "Create Meeting", path: "/mentor/createmeeting", icon: CalendarPlus2 },
   { title: "Private Chat", path: "/mentor/privatechat", icon: MessageCircle },
   { title: "Announcement", path: "/mentor/announcement", icon: Megaphone },
@@ -48,7 +48,7 @@ const MentorDashboard = () => {
     <div className="flex w-screen">
       {/* Sidebar */}
       <div
-        className={`lg:block absolute lg:static bottom-0 left-0 top-0 right-0 bg-black/70 z-10 lg:bg-transparent transition-all duration-200 ease-in-out ${
+        className={`lg:block absolute lg:static bottom-0 left-0 top-0 right-0  bg-black/70 z-10 lg:bg-transparent transition-all duration-200 ease-in-out ${
           toggle ? "block" : "hidden"
         }`}
       >
@@ -157,7 +157,7 @@ const MentorDashboard = () => {
         <Separator />
 
         {/* Main Content */}
-        <div className="m-4">
+        <div className="m-4 overflow-x-auto">
           <Outlet />
         </div>
       </div>
