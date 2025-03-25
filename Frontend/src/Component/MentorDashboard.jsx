@@ -37,10 +37,17 @@ const mentorLinks = [
 const MentorDashboard = () => {
   const [toggle, setToggle] = useState(false);
   const [open, setOpen] = useState(false);
+  const mentor_id = localStorage.getItem("id");
+  const name=localStorage.getItem("name");
+  const email=localStorage.getItem("email");
+
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
+    localStorage.removeItem("id");
+    localStorage.removeItem("name");
+    localStorage.removeItem("email");
     window.location.href = "/login"; 
   };
 
@@ -127,9 +134,9 @@ const MentorDashboard = () => {
               <Button variant="outline" className="flex items-center gap-2 px-3 py-2">
                 <Avatar className="w-8 h-8">
                   <AvatarImage src="https://randomuser.me/api/portraits/men/32.jpg" />
-                  <AvatarFallback className="text-sm font-medium">JD</AvatarFallback>
+                  <AvatarFallback className="text-sm font-medium">{name[0]}</AvatarFallback>
                 </Avatar>
-                <span className="font-medium text-black">John Doe</span>
+                <span className="font-medium text-black">{name}</span>
               </Button>
               <PopoverTrigger asChild>
                 <Button

@@ -36,8 +36,9 @@ export default function AuthPage() {
       if (response.ok) {
         // Store token in localStorage
         if (data.token) {
-          localStorage.setItem("authToken", data.token);
+          localStorage.setItem("token", data.token);
           localStorage.setItem("role", data.user.role);
+
         }
 
         Swal.fire("Success", data.message || "Signup successful!", "success").then(() => {
@@ -75,8 +76,11 @@ export default function AuthPage() {
       if (response.ok) {
         // Store token in localStorage
         if (data.token) {
-          localStorage.setItem("authToken", data.token);
+          localStorage.setItem("token", data.token);
           localStorage.setItem("role", data.user.role);
+          localStorage.setItem("id",     data.user.id);
+          localStorage.setItem("name", data.user.name);
+          localStorage.setItem("email", data.user.email);
         }
         console.log(data)
 
