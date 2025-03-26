@@ -19,7 +19,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
-app.use("/api/mentor", mentorRoutes); // Renamed `mentor` to `mentorRoutes` for clarity
+app.use("/api/mentor", mentorRoutes); 
 
 // Start Server
 const start = async () => {

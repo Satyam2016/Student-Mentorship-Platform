@@ -7,7 +7,9 @@ const removeStudent = require("../controllers/removeStudent.js");
 const createMeeting =require("../controllers/createMeeting.js");
 const fetchMeeting = require("../controllers/fetchMeeting.js");
 const fetchChat = require("../controllers/fetchChat.js");
-const addChatMessage =require("../controllers/addChatMessage")
+const addChatMessage =require("../controllers/addChatMessage");
+const { createAnnouncement, getAnnouncements, deleteAnnouncement } = require("../controllers/announcementController");
+const { addReply } = require("../controllers/replyController");
 
 
 const router = express.Router();
@@ -19,5 +21,10 @@ router.post("/createMeeting/:mentor_id",authMiddleware, createMeeting );
 router.get("/fetchMeeting/:mentor_id",authMiddleware, fetchMeeting);
 router.post("/addChatMessage",authMiddleware, addChatMessage);
 router.get("/fetchChat/:mentor_id/:user_id",authMiddleware, fetchChat);
+
+router.post("/createAnnouncement/:mentor_id", authMiddleware, createAnnouncement);
+router.get("/fetchAnnouncement/:mentor_id", authMiddleware, getAnnouncements);
+router.delete("/:mentor_id/:announcement_id", authMiddleware, deleteAnnouncement);
+router.post("/addReply/:mentor_id/:announcement_id", authMiddleware, addReply);
 
 module.exports = router;

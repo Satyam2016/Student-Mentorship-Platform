@@ -13,11 +13,14 @@ const chatSchema = new mongoose.Schema({
 const replySchema = new mongoose.Schema({
      time: { type: String, required: true },
      date: { type: String, required: true },
-     msg: { type: String, required: true }
+     msg: { type: String, required: true },
+     name: {type: String }
 });
 
 const announcementSchema = new mongoose.Schema({
      post: { type: String, required: true },
+     date: { type: String },
+     time: { type: String },
      reply: [replySchema]
 });
 
