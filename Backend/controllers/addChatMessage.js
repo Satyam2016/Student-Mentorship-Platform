@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const Mentor = require("../database/Schema/Mentor");
 
 const addChatMessage = async (req, res) => {
@@ -8,6 +9,10 @@ const addChatMessage = async (req, res) => {
       return res.status(400).json({ error: "All fields are required" });
     }
 
+    // Convert user_id to ObjectId for proper comparison
+    const userObjectId = new mongoose.Types.ObjectId(user_id);
+
+    // Find the mentor
     const mentor = await Mentor.findOne({ mentor_id });
 
     if (!mentor) {
@@ -15,11 +20,11 @@ const addChatMessage = async (req, res) => {
     }
 
     // Find chat for the user
-    let chat = mentor.chats.find(c => c.user_id === user_id);
+    let chat = mentor.chats.find(c => c.user_id.equals(userObjectId)); // Corrected comparison
 
     if (!chat) {
       // Create a new chat if not found
-      chat = { user_id, messages: [] };
+      chat = { user_id: userObjectId, messages: [] }; // Store user_id as ObjectId
       mentor.chats.push(chat);
     }
 

@@ -30,6 +30,12 @@ const addStudent = async (req, res) => {
 
         // Add user to the mentor's users list
         mentor.users.push(user._id);
+
+        const chatExists = mentor.chats.some(chat => chat.user_id.toString() === user._id.toString());
+        if (!chatExists) {
+            mentor.chats.push({ user_id: user._id, messages: [] });
+        }
+
         await mentor.save();
 
         return res.status(200).json({ message: "Student added successfully", student: user });

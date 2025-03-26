@@ -28,7 +28,7 @@ const materialSchema = new mongoose.Schema({
 
 const meetingSchema = new mongoose.Schema({
      title: { type: String, required: true },
-     date: { type: Date, required: true },  // Use Date type instead of String
+     date: { type: String, required: true },  // Use Date type instead of String
      time: { type: String, required: true },
      type: { type: String, required: true },
      link: { type: String, required: true }

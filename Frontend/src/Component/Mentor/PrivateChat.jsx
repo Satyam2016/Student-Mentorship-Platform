@@ -1,40 +1,88 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { Send, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
-const students = [
-  { id: 1, name: "Alice Johnson" },
-  { id: 2, name: "Bob Smith" },
-  { id: 3, name: "Charlie Davis" },
-  { id: 4, name: "Diana Lee" },
-  { id: 5, name: "Ethan Brown" },
-  { id: 6, name: "Fiona Miller" },
-  { id: 7, name: "George White" },
-  { id: 8, name: "Hannah Scott" },
-  { id: 9, name: "Isaac King" },
-  { id: 10, name: "Jackie Adams" },
-];
+import Swal from "sweetalert2"; // Ensure installed: `npm install sweetalert2`
 
 const PrivateChat = () => {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [chats, setChats] = useState({});
   const [message, setMessage] = useState("");
+  const [students, setStudents] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const mentor_id = localStorage.getItem("id");
+  const token = localStorage.getItem("token");
 
-  const selectStudent = (student) => {
-    setSelectedStudent(student);
-    if (!chats[student.id]) {
-      setChats((prev) => ({ ...prev, [student.id]: [] }));
+  const fetchStudents = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`http://localhost:5000/api/mentor/studentList/${mentor_id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setStudents(response.data);
+    } catch (error) {
+      Swal.fire({
+        title: "Error",
+        text: "Failed to fetch students.",
+        icon: "error",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
-  const sendMessage = () => {
+  useEffect(() => {
+    fetchStudents();
+  }, []);
+
+  const fetchChatHistory = async (user_id) => {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/mentor/fetchChat/${mentor_id}/${user_id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setChats((prev) => ({ ...prev, [user_id]: response.data.chat || [] }));
+    } catch (error) {
+      console.error("Error fetching chat history:", error);
+    }
+  };
+
+  const selectStudent = (student) => {
+    setSelectedStudent(student);
+    if (!chats[student._id]) {
+      fetchChatHistory(student._id);
+    }
+  };
+
+  const sendMessage = async () => {
     if (!message.trim() || !selectedStudent) return;
-    setChats((prev) => ({
-      ...prev,
-      [selectedStudent.id]: [...(prev[selectedStudent.id] || []), { text: message, sender: "You" }],
-    }));
-    setMessage("");
+
+    const newMessage = { userType: "mentor", msg: message };
+
+    try {
+      const response = await axios.post(
+        `http://localhost:5000/api/mentor/addChatMessage`,  // ✅ Correct API Endpoint
+        {
+          mentor_id,
+          user_id: selectedStudent._id,
+          userType: "mentor",
+          msg: message,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      // Append the new message to chat history
+      setChats((prev) => ({
+        ...prev,
+        [selectedStudent._id]: [...(prev[selectedStudent._id] || []), newMessage],
+      }));
+
+      setMessage(""); // Clear input after sending
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
   };
 
   return (
@@ -44,20 +92,26 @@ const PrivateChat = () => {
         <h3 className="text-lg font-semibold text-gray-700 flex items-center gap-2 mb-3">
           <Users className="h-5 w-5 text-gray-600" /> Students
         </h3>
-        
+
         {/* Scrollable Student List */}
         <ul className="space-y-2 flex-1 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-          {students.map((student) => (
-            <li
-              key={student.id}
-              className={`p-2 cursor-pointer rounded-lg ${
-                selectedStudent?.id === student.id ? "bg-blue-500 text-white" : "bg-gray-100 hover:bg-gray-200"
-              }`}
-              onClick={() => selectStudent(student)}
-            >
-              {student.name}
-            </li>
-          ))}
+          {loading ? (
+            <p className="text-gray-500 text-sm text-center">Loading...</p>
+          ) : students.length > 0 ? (
+            students.map((student) => (
+              <li
+                key={student._id}
+                className={`p-2 cursor-pointer rounded-lg ${
+                  selectedStudent?._id === student._id ? "bg-blue-500 text-white" : "bg-gray-100 hover:bg-gray-200"
+                }`}
+                onClick={() => selectStudent(student)}
+              >
+                {student.name}
+              </li>
+            ))
+          ) : (
+            <p className="text-gray-500 text-sm text-center">No students found.</p>
+          )}
         </ul>
       </div>
 
@@ -69,15 +123,17 @@ const PrivateChat = () => {
 
             {/* Scrollable Chat Messages */}
             <div className="flex-1 overflow-y-auto border border-gray-300 p-3 rounded-lg scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-              {chats[selectedStudent.id]?.length > 0 ? (
-                chats[selectedStudent.id].map((msg, index) => (
+              {chats[selectedStudent._id]?.length > 0 ? (
+                chats[selectedStudent._id].map((msg, index) => (
                   <p
                     key={index}
                     className={`font-thin p-2 m-1 rounded-md ${
-                      msg.sender === "You" ? "bg-blue-500 w-fit text-white self-end ml-auto" : "bg-gray-200 text-gray-700 w-fit"
+                      msg.userType === "mentor"
+                        ? "bg-blue-500 w-fit text-white self-end ml-auto"
+                        : "bg-gray-200 text-gray-700 w-fit"
                     }`}
                   >
-                    {msg.text}
+                    {msg.msg}
                   </p>
                 ))
               ) : (

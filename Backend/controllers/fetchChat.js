@@ -1,27 +1,27 @@
+const mongoose = require("mongoose");
 const Mentor = require("../database/Schema/Mentor");
 
 const fetchChat = async (req, res) => {
     try {
-        const { mentorId, userId } = req.params;
+        const { mentor_id, user_id } = req.params;
 
-        // Find the mentor
-        let mentor = await Mentor.findById(mentorId);
+        // Convert user_id to ObjectId
+        const userObjectId = new mongoose.Types.ObjectId(user_id);
+
+        // Find the mentor and populate the specific user's chat
+        let mentor = await Mentor.findOne({ mentor_id });
         if (!mentor) {
             return res.status(404).json({ error: "Mentor not found" });
         }
 
         // Find the chat for the given user
-        let userChat = mentor.chats.find(chat => chat._id.toString() === userId);
+        let userChat = mentor.chats.find(chat => chat.user_id.equals(userObjectId)); 
 
-        // If no chat exists, create an empty chat object
         if (!userChat) {
-            const newChat = { _id: userId, messages: [] };
-            mentor.chats.push(newChat);
-            await mentor.save();
-            userChat = newChat;
+            return res.status(404).json({ error: "Chat not found" });
         }
 
-        return res.status(200).json({ chat: userChat });
+        return res.status(200).json({ chat: userChat.messages });
     } catch (error) {
         console.error("Error fetching chat:", error);
         return res.status(500).json({ error: "Internal Server Error" });
