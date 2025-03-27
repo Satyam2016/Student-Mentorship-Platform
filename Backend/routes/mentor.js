@@ -10,6 +10,11 @@ const fetchChat = require("../controllers/fetchChat.js");
 const addChatMessage =require("../controllers/addChatMessage");
 const { createAnnouncement, getAnnouncements, deleteAnnouncement } = require("../controllers/announcementController");
 const { addReply } = require("../controllers/replyController");
+const fetchFile = require("../controllers/fetchFile.js");
+const uploadFile =require("../controllers/uploadFile.js");
+const multer = require("multer");
+const upload = multer({ storage: multer.memoryStorage() });
+const pdfDownload =require("../controllers/pdfDownload.js")
 
 
 const router = express.Router();
@@ -26,5 +31,9 @@ router.post("/createAnnouncement/:mentor_id", authMiddleware, createAnnouncement
 router.get("/fetchAnnouncement/:mentor_id", authMiddleware, getAnnouncements);
 router.delete("/:mentor_id/:announcement_id", authMiddleware, deleteAnnouncement);
 router.post("/addReply/:mentor_id/:announcement_id", authMiddleware, addReply);
+
+router.post("/uploadFile/:mentor_id", authMiddleware, uploadFile);
+router.get("/fetchFiles/:mentor_id",  authMiddleware, fetchFile);
+router.get("/downloadFile/:mentor_id/:fileId",authMiddleware,  pdfDownload);
 
 module.exports = router;
