@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const connectingDatabase = require("./database/connect.js");
 const authRoutes = require("./routes/auth");
 const mentorRoutes = require("./routes/mentor");
+const studentRoutes = require("./routes/student.js");
+const adminRoutes = require("./routes/admin")
 
 const app = express();
 const port = 5000;
@@ -20,6 +22,8 @@ app.get("/", (req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/mentor", mentorRoutes); 
+app.use("/api/student", studentRoutes);
+app.use("/api/admin", adminRoutes);
 
 // Start Server
 const start = async () => {

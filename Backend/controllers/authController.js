@@ -66,7 +66,7 @@ const loginUser = async (req, res) => {
 
     console.log(token)
 
-    res.status(200).json({ token, user: { id: user._id, name: user.name, role: user.role } });
+    res.status(200).json({ token, user: { id: user._id, name: user.name, role: user.role ,email: user.email, mentor_id: user.mentor_id } });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }

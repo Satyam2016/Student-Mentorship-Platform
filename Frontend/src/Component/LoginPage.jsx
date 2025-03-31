@@ -85,7 +85,15 @@ export default function AuthPage() {
         console.log(data)
 
         Swal.fire("Success", data.message || "Login successful!", "success").then(() => {
+          console.log("user data" ,data);
           window.location.href = data.user.role === "mentor" ? "/mentor" : "/student";
+          if(data.user.role === "mentor") window.location.href="/mentor"
+          else if(data.user.role === "student") {
+            console.log("dtaaaaaa>>>>",data.user)
+            localStorage.setItem("mentor_id",   data.user.mentor_id);
+            window.location.href="/student"
+          }
+          else window.location.href="/admin"
         });
       } else {
         Swal.fire("Error", data.message || "Login failed!", "error");

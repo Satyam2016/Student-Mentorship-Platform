@@ -1,17 +1,15 @@
 import React, { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import {
-  BookOpen,
-  Home,
   Users,
-  FileText,
-  MessageCircle,
-  Calendar,
-  Bell,
+  Home,
+  UserCheck,
+  BarChart,
   Menu,
   ChevronDown,
   Search,
-  LogOut
+  Bell,
+  LogOut,
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -20,29 +18,22 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-const studentLinks = [
-  { title: "Dashboard", path: "/student", icon: Home },
-  { title: "Mentor Detail", path: "/student/mentor", icon: Users },
-  { title: "Study Material", path: "/student/material", icon: FileText },
-  { title: "Private Chat", path: "/student/privatechat", icon: MessageCircle },
-  { title: "Schedule", path: "/student/schedule", icon: Calendar },
+const adminLinks = [
+//   { title: "Dashboard", path: "/admin", icon: Home },
+  { title: "Students", path: "/admin", icon: Users },
+  { title: "Mentors", path: "/admin/mentors", icon: Users },
+  { title: "Assign Mentor", path: "/admin/assign-mentor", icon: UserCheck },
+  { title: "Analytics", path: "/admin/analytics", icon: BarChart },
 ];
 
-const StudentDashboard = () => {
+const AdminDashboard = () => {
   const [toggle, setToggle] = useState(false);
   const [open, setOpen] = useState(false);
-  const mentor_id = localStorage.getItem("id");
-  const name=localStorage.getItem("name");
-  const email=localStorage.getItem("email");
-
+  const name = localStorage.getItem("name");
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    localStorage.removeItem("id");
-    localStorage.removeItem("name");
-    localStorage.removeItem("email");
-    window.location.href = "/login"; 
+    localStorage.clear();
+    window.location.href = "/login";
   };
 
   return (
@@ -65,13 +56,13 @@ const StudentDashboard = () => {
         <div className="absolute lg:relative lg:block w-[350px] lg:w-[256px] h-screen bg-zinc-900 pt-5 pb-4">
           {/* Logo */}
           <div className="relative flex items-center font-semibold italic text-white pl-5">
-            <BookOpen className="mr-2" /> SMP
+            <Home className="mr-2" /> Admin Panel
           </div>
 
           {/* Sidebar Navigation */}
           <div className="mt-6 mb-2 py-2 px-3">
             <nav className="grid gap-1.5">
-              {studentLinks.map((link, index) => (
+              {adminLinks.map((link, index) => (
                 <Link
                   key={index}
                   className={`flex items-center hover:bg-[#1F2937] hover:text-white px-2.5 py-2 rounded-md font-medium text-lg ${
@@ -127,8 +118,8 @@ const StudentDashboard = () => {
             <div className="flex items-center gap-2">
               <Button variant="outline" className="flex items-center gap-2 px-3 py-2">
                 <Avatar className="w-8 h-8">
-                  <AvatarImage src="https://randomuser.me/api/portraits/women/45.jpg" />
-                  <AvatarFallback className="text-sm font-medium">JD</AvatarFallback>
+                  <AvatarImage src="https://randomuser.me/api/portraits/men/45.jpg" />
+                  <AvatarFallback className="text-sm font-medium">AD</AvatarFallback>
                 </Avatar>
                 <span className="font-medium text-black">{name}</span>
               </Button>
@@ -162,4 +153,4 @@ const StudentDashboard = () => {
   );
 };
 
-export default StudentDashboard;
+export default AdminDashboard;

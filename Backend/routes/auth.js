@@ -13,12 +13,5 @@ router.get("/profile", authMiddleware, (req, res) => {
   res.json({ user: req.user });
 });
 
-// Mentor-only route
-
-
-// Student-only route
-router.get("/student/dashboard", authMiddleware, roleMiddleware("student"), (req, res) => {
-  res.json({ message: "Welcome, Student!" });
-});
 
 module.exports = router;

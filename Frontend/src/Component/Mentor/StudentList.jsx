@@ -79,9 +79,7 @@ const StudentList = () => {
       <div className="w-full max-w-3xl">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-semibold text-gray-800">Student List</h2>
-          <Button variant="outline" className="text-sm px-4" onClick={() => setShowInput(!showInput)}>
-            {showInput ? "Cancel" : "Add Student"}
-          </Button>
+         
         </div>
 
         {/* Input Field */}
