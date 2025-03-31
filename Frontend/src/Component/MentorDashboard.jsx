@@ -2,14 +2,11 @@ import React, { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import {
   BookOpen,
-  Users2,
-  UserPlus2,
-  UserMinus2,
+  Home,
   CalendarPlus2,
   MessageCircle,
   Megaphone,
   FileText,
-  Home,
   Search,
   Bell,
   Menu,
@@ -25,9 +22,6 @@ import { Badge } from "@/components/ui/badge";
 
 const mentorLinks = [
   { title: "Dashboard", path: "/mentor", icon: Home },
-  // { title: "Students", path: "/mentor", icon: Users2 },
-  // { title: "Add Student", path: "/mentor/add", icon: UserPlus2 },
-  // { title: "Remove Student", path: "/mentor/remove", icon: UserMinus2 },
   { title: "Create Meeting", path: "/mentor/createmeeting", icon: CalendarPlus2 },
   { title: "Private Chat", path: "/mentor/privatechat", icon: MessageCircle },
   { title: "Announcement", path: "/mentor/announcement", icon: Megaphone },
@@ -37,70 +31,35 @@ const mentorLinks = [
 const MentorDashboard = () => {
   const [toggle, setToggle] = useState(false);
   const [open, setOpen] = useState(false);
-  const mentor_id = localStorage.getItem("id");
-  const name=localStorage.getItem("name");
-  const email=localStorage.getItem("email");
-
+  const name = localStorage.getItem("name");
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    localStorage.removeItem("id");
-    localStorage.removeItem("name");
-    localStorage.removeItem("email");
+    localStorage.clear();
     window.location.href = "/login"; 
   };
 
   return (
-    <div className="flex w-screen">
+    <div className="flex min-h-screen w-screen bg-gray-100 overflow-hidden">
       {/* Sidebar */}
-      <div
-        className={`lg:block absolute lg:static bottom-0 left-0 top-0 right-0  bg-black/70 z-10 lg:bg-transparent transition-all duration-200 ease-in-out ${
-          toggle ? "block" : "hidden"
-        }`}
-      >
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setToggle(false)}
-          className="block lg:hidden absolute left-[360px] top-3 text-white text-3xl z-20"
-        >
-          ✖
-        </Button>
-
-        <div className="absolute lg:relative lg:block w-[350px] lg:w-[256px] h-screen bg-zinc-900 pt-5 pb-4">
+      <div className={`fixed lg:relative bg-gray-900 h-screen lg:w-64 w-72 transition-all duration-200 ease-in-out ${toggle ? "block" : "hidden lg:flex"} z-20`}>
+        <div className="h-full flex flex-col">
           {/* Logo */}
-          <div className="relative flex items-center font-semibold italic text-white pl-5">
-            <BookOpen className="mr-2" /> SMP
+          <div className="text-white font-semibold italic text-lg flex items-center gap-2 p-5">
+            <BookOpen className="h-6 w-6 text-indigo-400" /> SMP
           </div>
 
-          {/* Sidebar Navigation */}
-          <div className="mt-6 mb-2 py-2 px-3">
-            <nav className="grid gap-1.5">
-              {mentorLinks.map((link, index) => (
-                <Link
-                  key={index}
-                  className={`flex items-center hover:bg-[#1F2937] hover:text-white px-2.5 py-2 rounded-md font-medium text-lg ${
-                    link.title === "Dashboard" ? "bg-[#1F2937] text-white" : "text-gray-400"
-                  }`}
-                  to={link.path}
-                >
-                  <link.icon className="mr-2.5 h-6 w-6" />
-                  {link.title}
-                </Link>
-              ))}
-            </nav>
-          </div>
+          {/* Navigation */}
+          <nav className="mt-2 flex-1">
+            {mentorLinks.map((link, index) => (
+              <Link key={index} to={link.path} className="flex items-center px-5 py-3 text-gray-300 hover:bg-indigo-600 hover:text-white transition rounded-md">
+                <link.icon className="mr-3 h-5 w-5" /> {link.title}
+              </Link>
+            ))}
+          </nav>
 
-          <Separator className="bg-gray-500" />
-
-          {/* Logout Button in Sidebar */}
-          <div className="mt-4 px-3">
-            <Button
-              onClick={handleLogout}
-              variant="destructive"
-              className="w-full flex items-center justify-center py-2"
-            >
+          {/* Logout Button */}
+          <div className="p-5">
+            <Button onClick={handleLogout} className="w-full bg-red-500 hover:bg-red-600 text-white flex items-center justify-center py-2">
               <LogOut className="mr-2 h-5 w-5" />
               Logout
             </Button>
@@ -109,62 +68,52 @@ const MentorDashboard = () => {
       </div>
 
       {/* Main Content */}
-      <div className="min-h-screen w-full flex flex-col">
+      <div className="flex flex-col flex-1">
         {/* Top Navbar */}
-        <div className="flex items-center py-3 px-2">
-          <Button onClick={() => setToggle(true)} variant="ghost" size="icon" className="lg:hidden">
-            <Menu className="h-6 w-6 text-muted-foreground" />
-          </Button>
-          <Separator orientation="vertical" className="lg:hidden mx-4 h-6" />
-          <div className="flex-1">
-            <form>
-              <div className="relative">
-                <Search className="absolute left-1 lg:left-2 top-1.5 h-6 w-6 text-muted-foreground" />
-                <Input placeholder="Search" className="pl-10" />
-              </div>
-            </form>
+        <div className="fixed w-full lg:w-auto lg:relative flex items-center justify-between bg-white shadow px-5 py-3 z-10">
+          <div className="flex items-center gap-2">
+            <Button onClick={() => setToggle(!toggle)} variant="ghost" size="icon" className="lg:hidden">
+              <Menu className="h-6 w-6 text-gray-600" />
+            </Button>
+            <div className="relative">
+              <Search className="absolute left-2 top-2 h-5 w-5 text-gray-400" />
+              <Input placeholder="Search..." className="pl-9 border-gray-300 rounded-full w-56 md:w-64 lg:w-72" />
+            </div>
           </div>
-          <div className="relative">
-            <Bell className="h-6 w-6 text-muted-foreground" />
-            <Badge className="absolute top-0 right-0 w-3 h-3 p-0 bg-red-500">4</Badge>
-          </div>
-          <Separator orientation="vertical" className="mx-4 h-6" />
-          <Popover open={open} onOpenChange={setOpen}>
-            <div className="flex items-center gap-2">
-              <Button variant="outline" className="flex items-center gap-2 px-3 py-2">
-                <Avatar className="w-8 h-8">
-                  <AvatarImage src="https://randomuser.me/api/portraits/men/32.jpg" />
-                  <AvatarFallback className="text-sm font-medium">{name[0]}</AvatarFallback>
-                </Avatar>
-                <span className="font-medium text-black">{name}</span>
-              </Button>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="p-2"
-                  onClick={() => setOpen(!open)}
-                >
-                  <ChevronDown className="h-4 w-4 text-gray-400" />
-                </Button>
-              </PopoverTrigger>
+
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <Bell className="h-6 w-6 text-gray-600" />
+              <Badge className="absolute top-0 right-0 w-3 h-3 p-0 bg-red-500">4</Badge>
             </div>
 
-            <PopoverContent align="end" className="w-40 p-2 bg-white shadow-md rounded-md">
-              <button
-                onClick={handleLogout}
-                className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-gray-100 rounded-md flex items-center"
-              >
-                <LogOut className="mr-2 h-5 w-5" />
-                Logout
-              </button>
-            </PopoverContent>
-          </Popover>
+            <Popover open={open} onOpenChange={setOpen}>
+              <div className="flex items-center gap-2">
+                <Button variant="outline" className="flex items-center gap-2 px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-full">
+                  <Avatar className="w-9 h-9">
+                    <AvatarImage src="https://randomuser.me/api/portraits/men/32.jpg" />
+                    <AvatarFallback className="text-sm font-medium">{name[0]}</AvatarFallback>
+                  </Avatar>
+                  <span className="font-medium text-gray-800">{name}</span>
+                </Button>
+                <PopoverTrigger asChild>
+                  <Button variant="ghost" size="icon" className="p-2">
+                    <ChevronDown className="h-4 w-4 text-gray-500" />
+                  </Button>
+                </PopoverTrigger>
+              </div>
+              <PopoverContent align="end" className="w-40 p-2 bg-white shadow-md rounded-md">
+                <button onClick={handleLogout} className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-gray-100 rounded-md flex items-center">
+                  <LogOut className="mr-2 h-5 w-5" />
+                  Logout
+                </button>
+              </PopoverContent>
+            </Popover>
+          </div>
         </div>
-        <Separator />
 
-        {/* Main Content */}
-        <div className="m-4 overflow-x-auto">
+        {/* Main Content Area */}
+        <div className="flex-1 overflow-auto mt-[60px] lg:mt-0 p-6">
           <Outlet />
         </div>
       </div>

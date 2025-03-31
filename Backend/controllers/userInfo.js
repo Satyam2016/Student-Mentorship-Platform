@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 
 const userInfo = async (req, res) => {
     try {
+        console.log("inside userInfo")
         const userId = req.params.userId;
         if (!mongoose.Types.ObjectId.isValid(userId)) {
             return res.status(400).json({ message: "Invalid user ID format" });

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import {
-  BookOpen,
   Home,
   Users,
   FileText,
@@ -11,7 +10,7 @@ import {
   Menu,
   ChevronDown,
   Search,
-  LogOut
+  LogOut,
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -24,6 +23,7 @@ const studentLinks = [
   { title: "Dashboard", path: "/student", icon: Home },
   { title: "Mentor Detail", path: "/student/mentor", icon: Users },
   { title: "Study Material", path: "/student/material", icon: FileText },
+  { title: "Announcement", path: "/student/announcement", icon: FileText },
   { title: "Private Chat", path: "/student/privatechat", icon: MessageCircle },
   { title: "Schedule", path: "/student/schedule", icon: Calendar },
 ];
@@ -31,130 +31,118 @@ const studentLinks = [
 const StudentDashboard = () => {
   const [toggle, setToggle] = useState(false);
   const [open, setOpen] = useState(false);
-  const mentor_id = localStorage.getItem("id");
-  const name=localStorage.getItem("name");
-  const email=localStorage.getItem("email");
-
+  const name = localStorage.getItem("name");
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    localStorage.removeItem("id");
-    localStorage.removeItem("name");
-    localStorage.removeItem("email");
-    window.location.href = "/login"; 
+    localStorage.clear();
+    window.location.href = "/login";
   };
 
   return (
-    <div className="flex w-screen">
+    <div className="flex w-screen h-screen">
       {/* Sidebar */}
       <div
-        className={`lg:block absolute lg:static bottom-0 left-0 top-0 right-0 bg-black/70 z-10 lg:bg-transparent transition-all duration-200 ease-in-out ${
-          toggle ? "block" : "hidden"
-        }`}
+        className={`fixed lg:static bg-black/80 z-50 lg:bg-zinc-900 transition-all duration-300 ease-in-out ${
+          toggle ? "w-[260px]" : "w-0 lg:w-[260px]"
+        } h-screen overflow-hidden`}
       >
         <Button
           variant="ghost"
           size="icon"
           onClick={() => setToggle(false)}
-          className="block lg:hidden absolute left-[360px] top-3 text-white text-3xl z-20"
+          className="absolute top-3 right-3 lg:hidden text-white text-xl"
         >
           ✖
         </Button>
 
-        <div className="absolute lg:relative lg:block w-[350px] lg:w-[256px] h-screen bg-zinc-900 pt-5 pb-4">
-          {/* Logo */}
-          <div className="relative flex items-center font-semibold italic text-white pl-5">
-            <BookOpen className="mr-2" /> SMP
+        {/* Sidebar Content */}
+        <div className="p-5 text-white">
+          <div className="flex items-center gap-2 text-xl font-bold">
+            <MessageCircle /> SMP
           </div>
 
-          {/* Sidebar Navigation */}
-          <div className="mt-6 mb-2 py-2 px-3">
-            <nav className="grid gap-1.5">
-              {studentLinks.map((link, index) => (
-                <Link
-                  key={index}
-                  className={`flex items-center hover:bg-[#1F2937] hover:text-white px-2.5 py-2 rounded-md font-medium text-lg ${
-                    link.title === "Dashboard" ? "bg-[#1F2937] text-white" : "text-gray-400"
-                  }`}
-                  to={link.path}
-                >
-                  <link.icon className="mr-2.5 h-6 w-6" />
-                  {link.title}
-                </Link>
-              ))}
-            </nav>
-          </div>
+          <nav className="mt-6 space-y-1">
+            {studentLinks.map((link, index) => (
+              <Link
+                key={index}
+                className="flex items-center gap-3 px-4 py-2 rounded-md text-gray-300 hover:bg-blue-600 hover:text-white transition"
+                to={link.path}
+              >
+                <link.icon className="h-5 w-5" />
+                {link.title}
+              </Link>
+            ))}
+          </nav>
+        </div>
 
-          <Separator className="bg-gray-500" />
+        <Separator className="mt-4 bg-gray-500" />
 
-          {/* Logout Button in Sidebar */}
-          <div className="mt-4 px-3">
-            <Button
-              onClick={handleLogout}
-              variant="destructive"
-              className="w-full flex items-center justify-center py-2"
-            >
-              <LogOut className="mr-2 h-5 w-5" />
-              Logout
-            </Button>
-          </div>
+        {/* Logout */}
+        <div className="p-5">
+          <Button
+            onClick={handleLogout}
+            variant="destructive"
+            className="w-full flex items-center gap-2"
+          >
+            <LogOut className="h-5 w-5" />
+            Logout
+          </Button>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="min-h-screen w-full flex flex-col">
-        {/* Top Navbar */}
-        <div className="flex items-center py-3 px-2">
-          <Button onClick={() => setToggle(true)} variant="ghost" size="icon" className="lg:hidden">
-            <Menu className="h-6 w-6 text-muted-foreground" />
-          </Button>
-          <Separator orientation="vertical" className="lg:hidden mx-4 h-6" />
-          <div className="flex-1">
-            <form>
-              <div className="relative">
-                <Search className="absolute left-1 lg:left-2 top-1.5 h-6 w-6 text-muted-foreground" />
-                <Input placeholder="Search" className="pl-10" />
-              </div>
+      <div className="flex-1 flex flex-col">
+        {/* Navbar */}
+        <div className="flex items-center justify-between bg-white px-4 py-3 shadow-md">
+          <div className="flex items-center gap-4">
+            <Button
+              onClick={() => setToggle(true)}
+              variant="ghost"
+              size="icon"
+              className="lg:hidden"
+            >
+              <Menu className="h-6 w-6 text-gray-600" />
+            </Button>
+            <form className="relative w-full max-w-[300px]">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Input placeholder="Search" className="pl-10" />
             </form>
           </div>
-          <div className="relative">
-            <Bell className="h-6 w-6 text-muted-foreground" />
-            <Badge className="absolute top-0 right-0 w-3 h-3 p-0 bg-red-500">2</Badge>
-          </div>
-          <Separator orientation="vertical" className="mx-4 h-6" />
-          <Popover open={open} onOpenChange={setOpen}>
-            <div className="flex items-center gap-2">
-              <Button variant="outline" className="flex items-center gap-2 px-3 py-2">
-                <Avatar className="w-8 h-8">
-                  <AvatarImage src="https://randomuser.me/api/portraits/women/45.jpg" />
-                  <AvatarFallback className="text-sm font-medium">JD</AvatarFallback>
-                </Avatar>
-                <span className="font-medium text-black">{name}</span>
-              </Button>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="p-2"
-                  onClick={() => setOpen(!open)}
-                >
-                  <ChevronDown className="h-4 w-4 text-gray-400" />
-                </Button>
-              </PopoverTrigger>
+
+          <div className="flex items-center gap-5">
+            <div className="relative">
+              <Bell className="h-6 w-6 text-gray-600 cursor-pointer" />
+              <Badge className="absolute -top-1 -right-1 bg-red-500 text-xs">2</Badge>
             </div>
 
-            <PopoverContent align="end" className="w-40 p-2 bg-white shadow-md rounded-md">
-              <button className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-gray-100 rounded-md">
-                Logout
-              </button>
-            </PopoverContent>
-          </Popover>
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className="flex items-center gap-2">
+                  <Avatar className="w-8 h-8">
+                    <AvatarImage src="https://randomuser.me/api/portraits/women/45.jpg" />
+                    <AvatarFallback>{name?.charAt(0) || "U"}</AvatarFallback>
+                  </Avatar>
+                  <span className="text-black">{name}</span>
+                  <ChevronDown className="h-4 w-4 text-gray-500" />
+                </Button>
+              </PopoverTrigger>
+
+              <PopoverContent align="end" className="w-40 p-2 bg-white shadow-md rounded-md">
+                <button
+                  className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-gray-100 rounded-md"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </button>
+              </PopoverContent>
+            </Popover>
+          </div>
         </div>
+
         <Separator />
 
-        {/* Main Content */}
-        <div className="m-4">
+        {/* Page Content */}
+        <div className="m-4 p-4 bg-white rounded-md shadow-md flex-1">
           <Outlet />
         </div>
       </div>

@@ -19,6 +19,7 @@ const replySchema = new mongoose.Schema({
 
 const announcementSchema = new mongoose.Schema({
      post: { type: String, required: true },
+     name: { type: String},
      date: { type: String },
      time: { type: String },
      reply: [replySchema]

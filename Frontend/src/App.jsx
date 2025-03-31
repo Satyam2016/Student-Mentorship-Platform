@@ -21,6 +21,7 @@ import MentorInfo from "./Component/Student/MentorInfo";
 import StudyMaterial from "./Component/Student/StudyMaterial";
 import StudentPrivateChat from "./Component/Student/PrivateChat";
 import Schedule from "./Component/Student/Schedule";
+import StudentAnnouncement from "./Component/Student/StudentAnnouncement";
 
 // Admin Components
 import Students from "./Component/Admin/Students";
@@ -53,6 +54,7 @@ function App() {
         <Route element={<PrivateRoute allowedRoles={["student"]} />}>
           <Route path="/student" element={<StudentDashboard />}>
             <Route index element={<UserInfo />} />
+            <Route path="announcement" element={< StudentAnnouncement />} />
             <Route path="mentor" element={<MentorInfo />} />
             <Route path="material" element={<StudyMaterial />} />
             <Route path="privatechat" element={<StudentPrivateChat />} />

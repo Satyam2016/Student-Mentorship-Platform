@@ -15,6 +15,7 @@ const Announcement = () => {
   const API_URL = "http://localhost:5000/api/mentor";
   const mentor_id = localStorage.getItem("id");
   const token = localStorage.getItem("token");
+  const name= localStorage.getItem("name")
 
   const fetchAnnouncements = async () => {
     setLoading(true);
@@ -39,7 +40,7 @@ const Announcement = () => {
     try {
       const res = await axios.post(
         `${API_URL}/createAnnouncement/${mentor_id}`,
-        { post },
+        { post, name },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setAnnouncements([res.data.announcement, ...announcements]);
@@ -51,30 +52,35 @@ const Announcement = () => {
   };
 
   return (
-    <div className="w-full  max-w-4xl mx-auto shadow-lg rounded-xl p-5 border ">
-      <h2 className="text-lg font-semibold text-gray-800 mb-4">📢 Announcements</h2>
+    <div className="flex flex-col w-full h-full p-6">
+      {/* Header */}
+      <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+        📢 Announcements
+      </h2>
 
       {/* Announcement Input */}
-      <div className="flex flex-col sm:flex-row gap-3 items-start">
-        <Avatar>
-          <AvatarImage src="https://randomuser.me/api/portraits/women/45.jpg" />
-          <AvatarFallback>JD</AvatarFallback>
-        </Avatar>
-        <div className="w-full">
-          <Input
-            type="text"
-            placeholder="Share an update..."
-            className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            value={post}
-            onChange={(e) => setPost(e.target.value)}
-          />
-          <div className="flex justify-end mt-3">
-            <Button
-              onClick={handlePost}
-              className="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 flex items-center transition"
-            >
-              <Send className="h-5 w-5 mr-2" /> Post
-            </Button>
+      <div className="bg-white shadow-md rounded-lg p-5 border border-gray-200">
+        <div className="flex gap-4 items-start">
+          <Avatar>
+            <AvatarImage src="https://randomuser.me/api/portraits/women/45.jpg" />
+            <AvatarFallback>JD</AvatarFallback>
+          </Avatar>
+          <div className="flex-1">
+            <Input
+              type="text"
+              placeholder="Share an update..."
+              className="border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500"
+              value={post}
+              onChange={(e) => setPost(e.target.value)}
+            />
+            <div className="flex justify-end mt-3">
+              <Button
+                onClick={handlePost}
+                className="bg-blue-600 text-white px-6 py-2 rounded-lg shadow-md hover:bg-blue-700 flex items-center transition"
+              >
+                <Send className="h-5 w-5 mr-2" /> Post
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -83,10 +89,13 @@ const Announcement = () => {
 
       {loading && <p className="text-center text-gray-500">Loading announcements...</p>}
 
-      <div className="max-h-[500px] overflow-y-auto space-y-5 p-2">
-        {announcements.map((post) => (
-          <AnnouncementPost key={post._id} post={post} />
-        ))}
+      {/* Announcement List */}
+      <div className="flex-1 overflow-auto space-y-4">
+        {announcements.length === 0 && !loading ? (
+          <p className="text-center text-gray-500">No announcements yet.</p>
+        ) : (
+          announcements.map((post) => <AnnouncementPost key={post._id} post={post} />)
+        )}
       </div>
     </div>
   );
@@ -97,7 +106,7 @@ const AnnouncementPost = ({ post }) => {
   const [reply, setReply] = useState("");
   const [replies, setReplies] = useState(post.reply || []);
   const [showReplyInput, setShowReplyInput] = useState(false);
-  const [showReplies, setShowReplies] = useState(false); // Toggle replies dropdown
+  const [showReplies, setShowReplies] = useState(false);
 
   const API_URL = "http://localhost:5000/api/mentor";
   const mentor_id = localStorage.getItem("id");
@@ -122,29 +131,29 @@ const AnnouncementPost = ({ post }) => {
   };
 
   return (
-    <div className="p-4 border border-gray-200 rounded-lg shadow-sm bg-gray-50">
+    <div className="bg-white p-5 border  border-gray-300 rounded-lg shadow-md">
       {/* Post Header */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
         <Avatar>
           <AvatarImage src="https://randomuser.me/api/portraits/women/45.jpg" />
           <AvatarFallback>JD</AvatarFallback>
         </Avatar>
         <div>
-          <p className="font-semibold text-gray-800">{post.author || "Jane Doe"}</p>
+          <p className="font-semibold text-gray-900">{post.name || "Jane Doe"}</p>
           <span className="text-sm text-gray-500">{post.date} | {post.time}</span>
         </div>
       </div>
 
       {/* Post Content */}
-      <p className="mt-3 text-gray-800">{post.post}</p>
+      <p className="mt-3 text-gray-900">{post.post}</p>
       {post.file && (
-        <a href={post.file} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline mt-2 block text-sm font-medium hover:text-blue-800">
+        <a href={post.file} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline mt-2 block text-sm hover:text-blue-800">
           📎 View Attachment
         </a>
       )}
 
       {/* Reply Section */}
-      <div className="mt-3">
+      <div className="mt-4">
         <Button
           className="text-gray-600 hover:text-blue-600 flex items-center gap-1"
           variant="ghost"
@@ -159,11 +168,11 @@ const AnnouncementPost = ({ post }) => {
               <AvatarImage src="https://randomuser.me/api/portraits/women/45.jpg" />
               <AvatarFallback>JD</AvatarFallback>
             </Avatar>
-            <div className="w-full">
+            <div className="flex-1">
               <Input
                 type="text"
                 placeholder="Write a reply..."
-                className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-blue-500"
                 value={reply}
                 onChange={(e) => setReply(e.target.value)}
               />
@@ -180,20 +189,19 @@ const AnnouncementPost = ({ post }) => {
         {replies.length > 0 && (
           <div className="mt-3">
             <Button variant="ghost" className="text-gray-600 flex items-center" onClick={() => setShowReplies(!showReplies)}>
-              {showReplies ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />} {showReplies ? "Hide Replies" : "Show Replies"} ({replies.length})
+              {showReplies ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />} {showReplies ? "Hide Replies" : `Show Replies (${replies.length})`}
             </Button>
-
-            {showReplies && (
-              <div className="max-h-[200px] overflow-y-auto mt-2 space-y-2">
-                {replies.map((reply, index) => (
-                  <div key={index} className="p-2 bg-gray-100 border border-gray-200 rounded-lg text-sm">
-                    <p className="font-semibold text-gray-700">{reply.author || name}</p>
-                    <span className="text-xs text-gray-500">{reply.date} | {reply.time}</span>
-                    <p className="text-gray-800">{reply.msg}</p>
-                  </div>
-                ))}
+          </div>
+        )}
+        {showReplies && (
+          <div className="max-h-[200px] overflow-y-auto mt-2 space-y-2">
+            {replies.map((reply, index) => (
+              <div key={index} className="p-2 bg-gray-100 border border-gray-200 rounded-lg text-sm">
+                <p className="font-semibold text-gray-700">{reply.name }</p>
+                <span className="text-xs text-gray-500">{reply.date} | {reply.time}</span>
+                <p className="text-gray-800">{reply.msg}</p>
               </div>
-            )}
+            ))}
           </div>
         )}
       </div>

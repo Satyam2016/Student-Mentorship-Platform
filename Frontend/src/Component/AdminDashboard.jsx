@@ -136,7 +136,9 @@ const AdminDashboard = () => {
             </div>
 
             <PopoverContent align="end" className="w-40 p-2 bg-white shadow-md rounded-md">
-              <button className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-gray-100 rounded-md">
+              <button className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-gray-100 rounded-md " 
+              onClick={handleLogout}
+              >
                 Logout
               </button>
             </PopoverContent>

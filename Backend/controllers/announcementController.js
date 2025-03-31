@@ -4,7 +4,7 @@ const Mentor = require("../database/Schema/Mentor");
 const createAnnouncement = async (req, res) => {
      try {
           const { mentor_id } = req.params;
-          const { post } = req.body;
+          const { post, name } = req.body;
 
           if (!post) return res.status(400).json({ error: "Post content is required" });
 
@@ -15,7 +15,7 @@ const createAnnouncement = async (req, res) => {
           let formattedDate = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
           let formattedTime = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
 
-          const newAnnouncement = { post, date : formattedDate,time: formattedTime,  reply: [] };
+          const newAnnouncement = { post,name,  date : formattedDate,time: formattedTime,  reply: [] };
           mentor.announcements.push(newAnnouncement);
           await mentor.save();
 

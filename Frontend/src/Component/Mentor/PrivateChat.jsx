@@ -3,7 +3,7 @@ import axios from "axios";
 import { Send, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import Swal from "sweetalert2"; // Ensure installed: `npm install sweetalert2`
+import Swal from "sweetalert2"; // Ensure installed: `npm install sweetalert2` 
 
 const PrivateChat = () => {
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -13,6 +13,22 @@ const PrivateChat = () => {
   const [loading, setLoading] = useState(false);
   const mentor_id = localStorage.getItem("id");
   const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    fetchStudents();
+  }, []);
+
+  // Polling Effect for Real-time Messages
+  useEffect(() => {
+    if (selectedStudent) {
+      fetchChatHistory(selectedStudent._id); // Fetch immediately when a student is selected
+      const interval = setInterval(() => {
+        fetchChatHistory(selectedStudent._id);
+      }, 3000); // Polling every 3 seconds
+
+      return () => clearInterval(interval); // Cleanup on unmount
+    }
+  }, [selectedStudent]);
 
   const fetchStudents = async () => {
     try {
@@ -34,16 +50,15 @@ const PrivateChat = () => {
     }
   };
 
-  useEffect(() => {
-    fetchStudents();
-  }, []);
-
   const fetchChatHistory = async (user_id) => {
     try {
       const response = await axios.get(`http://localhost:5000/api/mentor/fetchChat/${mentor_id}/${user_id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setChats((prev) => ({ ...prev, [user_id]: response.data.chat || [] }));
+      setChats((prev) => ({
+        ...prev,
+        [user_id]: response.data.chat || [],
+      }));
     } catch (error) {
       console.error("Error fetching chat history:", error);
     }
@@ -51,9 +66,6 @@ const PrivateChat = () => {
 
   const selectStudent = (student) => {
     setSelectedStudent(student);
-    if (!chats[student._id]) {
-      fetchChatHistory(student._id);
-    }
   };
 
   const sendMessage = async () => {
@@ -62,8 +74,8 @@ const PrivateChat = () => {
     const newMessage = { userType: "mentor", msg: message };
 
     try {
-      const response = await axios.post(
-        `http://localhost:5000/api/mentor/addChatMessage`,  // ✅ Correct API Endpoint
+      await axios.post(
+        `http://localhost:5000/api/mentor/addChatMessage`,
         {
           mentor_id,
           user_id: selectedStudent._id,
