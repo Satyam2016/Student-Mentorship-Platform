@@ -23,7 +23,7 @@ const adminLinks = [
   { title: "Students", path: "/admin", icon: Users },
   { title: "Mentors", path: "/admin/mentors", icon: Users },
   { title: "Assign Mentor", path: "/admin/assign-mentor", icon: UserCheck },
-  { title: "Analytics", path: "/admin/analytics", icon: BarChart },
+  // { title: "Analytics", path: "/admin/analytics", icon: BarChart },
 ];
 
 const AdminDashboard = () => {
