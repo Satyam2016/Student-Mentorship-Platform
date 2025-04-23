@@ -22,6 +22,7 @@ import { Badge } from "@/components/ui/badge";
 
 const mentorLinks = [
   { title: "Dashboard", path: "/mentor", icon: Home },
+  { title: "Student List", path: "/mentor/studentList", icon: CalendarPlus2 },
   { title: "Create Meeting", path: "/mentor/createmeeting", icon: CalendarPlus2 },
   { title: "Private Chat", path: "/mentor/privatechat", icon: MessageCircle },
   { title: "Announcement", path: "/mentor/announcement", icon: Megaphone },

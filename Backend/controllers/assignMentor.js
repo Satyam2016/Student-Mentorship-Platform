@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 
 const assignMentor = async (req, res) => {
     try {
+        
         const { studentId, mentorId } = req.body;
 
         if (!studentId || !mentorId) {
@@ -25,11 +26,12 @@ const assignMentor = async (req, res) => {
         if (!mentor || mentor.role !== "mentor") {
             return res.status(404).json({ message: "Mentor not found." });
         }
-
+        
         // Assign mentor to student
         student.mentor_id = mentorId;
         await student.save();
-
+        
+        console.log("here")
         // Update Mentor Model: Add student to mentor's `users` array
         const updatedMentor = await Mentor.findOneAndUpdate(
             { mentor_id: mentorId },

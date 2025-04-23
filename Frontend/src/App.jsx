@@ -14,6 +14,7 @@ import CreateMeeting from "./Component/Mentor/CreateMeeting";
 import PrivateChat from "./Component/Mentor/PrivateChat";
 import Announcement from "./Component/Mentor/Announcement";
 import Material from "./Component/Mentor/Material";
+import MentorInfoo from "./Component/Mentor/MentorInfo";
 
 // Student Components
 import UserInfo from "./Component/Student/UserInfo";
@@ -40,7 +41,8 @@ function App() {
         {/* Protected Mentor Routes */}
         <Route element={<PrivateRoute allowedRoles={["mentor"]} />}>
           <Route path="/mentor" element={<MentorDashboard />}>
-            <Route index element={<StudentList />} />
+            <Route index element={<MentorInfoo />} />
+            <Route path="studentList" element={<StudentList />} />
             <Route path="add" element={<AddStudent />} />
             <Route path="remove" element={<RemoveStudent />} />
             <Route path="createmeeting" element={<CreateMeeting />} />

@@ -15,6 +15,7 @@ const uploadFile =require("../controllers/uploadFile.js");
 const multer = require("multer");
 const upload = multer({ storage: multer.memoryStorage() });
 const pdfDownload =require("../controllers/pdfDownload.js")
+const updateMentorInfo =require("../controllers/updateMentorInfo.js")
 
 
 const router = express.Router();
@@ -35,5 +36,7 @@ router.post("/addReply/:mentor_id/:announcement_id", authMiddleware, addReply);
 router.post("/uploadFile/:mentor_id", authMiddleware, uploadFile);
 router.get("/fetchFiles/:mentor_id",  authMiddleware, fetchFile);
 router.get("/downloadFile/:mentor_id/:fileId",authMiddleware,  pdfDownload);
+
+router.put("/update/:id", authMiddleware ,  updateMentorInfo)
 
 module.exports = router;
